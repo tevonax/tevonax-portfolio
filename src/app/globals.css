@@ -1,0 +1,296 @@
+@import "tailwindcss";
+
+/* Theme switching is driven by [data-theme] on <html> (set before paint by the
+   inline script in layout.tsx). `dark:` utilities follow the same attribute. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ------------------------------------------------------------------
+   Design tokens
+   Brand is monochrome (the logo is black on white). One restrained
+   ultramarine accent is used sparingly: focus, hover, small highlights.
+   Contrast (WCAG): ink/canvas 19.9:1 · ink-muted 7.8:1 · ink-subtle 5.3:1
+   accent on canvas 5.9:1 (light) · accent on canvas 7.0:1 (dark)
+------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --canvas: #ffffff;
+  --surface: #f7f7f6;
+  --sunken: #efefed;
+
+  --ink: #0a0a0a;
+  --ink-muted: #525252;
+  --ink-subtle: #6b6b6b;
+
+  --line: #e4e4e1;
+  --line-strong: #cfcfca;
+
+  --accent: #2b4bff;
+  --accent-ink: #ffffff;
+
+  /* Form errors only (6.6:1 on canvas) */
+  --danger: #b42318;
+
+  /* Inverted block ("Approach" section) */
+  --inverse: #0a0a0a;
+  --inverse-ink: #f5f5f5;
+  --inverse-muted: #a3a3a3;
+  --inverse-line: #2a2a2a;
+  --accent-on-inverse: #8fa2ff;
+
+  --grid-line: rgb(10 10 10 / 0.055);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --canvas: #0a0a0a;
+  --surface: #111111;
+  --sunken: #181818;
+
+  --ink: #f5f5f5;
+  --ink-muted: #a3a3a3;
+  --ink-subtle: #8a8a8a;
+
+  --line: #242424;
+  --line-strong: #3a3a3a;
+
+  --accent: #7c93ff;
+  --accent-ink: #0a0a0a;
+
+  --danger: #ff8a80;
+
+  --inverse: #141414;
+  --inverse-ink: #f5f5f5;
+  --inverse-muted: #a3a3a3;
+  --inverse-line: #2c2c2c;
+  --accent-on-inverse: #7c93ff;
+
+  --grid-line: rgb(255 255 255 / 0.05);
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-subtle: var(--ink-subtle);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-danger: var(--danger);
+  --color-inverse: var(--inverse);
+  --color-inverse-ink: var(--inverse-ink);
+  --color-inverse-muted: var(--inverse-muted);
+  --color-inverse-line: var(--inverse-line);
+  --color-accent-on-inverse: var(--accent-on-inverse);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo,
+    Consolas, monospace;
+  /* Wordmark only: matches the humanist bold lettering of the Tevonax logo */
+  --font-brand: var(--font-open-sans), "Open Sans", ui-sans-serif, system-ui,
+    sans-serif;
+}
+
+/* ------------------------------------------------------------------
+   Type scale (fluid, clamp-based). One <h1> per page; h2 for sections;
+   h3 for cards. Styles are decoupled from the semantic heading level.
+------------------------------------------------------------------- */
+@utility type-display {
+  font-size: clamp(2.6rem, 1.35rem + 5.4vw, 5.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+@utility type-h2 {
+  font-size: clamp(2rem, 1.3rem + 2.8vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+@utility type-h3 {
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+@utility type-lead {
+  font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+@utility type-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------- */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 4.5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Signature motifs
+------------------------------------------------------------------- */
+@layer components {
+  /* Blueprint grid, fading out toward the edges */
+  .bg-blueprint {
+    background-image:
+      linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    -webkit-mask-image: radial-gradient(
+      ellipse 85% 75% at 68% 42%,
+      #000 25%,
+      transparent 78%
+    );
+    mask-image: radial-gradient(
+      ellipse 85% 75% at 68% 42%,
+      #000 25%,
+      transparent 78%
+    );
+  }
+
+  /* Engineering "dimension line" drawn under a word */
+  .dimension {
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .dimension::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.1em;
+    height: 0.16em;
+    background:
+      linear-gradient(var(--accent), var(--accent)) center / 100% 2px no-repeat,
+      linear-gradient(var(--accent), var(--accent)) left center / 2px 100%
+        no-repeat,
+      linear-gradient(var(--accent), var(--accent)) right center / 2px 100%
+        no-repeat;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Motion (all disabled under prefers-reduced-motion)
+------------------------------------------------------------------- */
+@keyframes aperture-scan {
+  0% {
+    transform: translateY(-24px);
+  }
+  55%,
+  100% {
+    transform: translateY(90px);
+  }
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.aperture-scan {
+  animation: aperture-scan 5.5s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+}
+
+.orbit {
+  animation: orbit var(--orbit-duration, 60s) linear infinite;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-rise {
+    animation: rise-in 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: var(--rise-delay, 0ms);
+  }
+
+  /* Scroll reveal: only hidden when JS is running (html.js) */
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-delay, 0ms),
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) var(--reveal-delay, 0ms);
+  }
+
+  .js [data-reveal][data-in] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aperture-scan,
+  .orbit {
+    animation: none;
+  }
+
+  .aperture-scan {
+    display: none;
+  }
+}
