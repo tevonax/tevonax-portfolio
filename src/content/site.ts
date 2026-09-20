@@ -9,6 +9,8 @@ type Site = {
   name: string;
   tagline: string;
   description: string;
+  /** Primary public URL (no trailing slash). Used for canonical URLs, Open Graph, sitemap. */
+  url: string;
   email: string;
   github: string;
   /** Optional channels: fill any of these in and they appear automatically. */
@@ -25,7 +27,10 @@ export const site: Site = {
   description:
     "Tevonax is a software company that designs and engineers web platforms, mobile apps and custom software: clear in structure, careful in detail and built to last.",
 
-  // CONFIRM: replace with the real business email before launch.
+  // Primary domain: the apex (no "www"). Point www at it with a redirect in Vercel.
+  url: "https://tevonax.com",
+
+  // CONFIRM: this mailbox must actually exist (or forward somewhere) before launch.
   email: "hello@tevonax.com",
 
   github: "https://github.com/tevonax",

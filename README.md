@@ -66,10 +66,21 @@ If the variables are missing or the provider fails, the visitor keeps everything
 - [ ] Confirm the business email in `src/content/site.ts` (`site.email`).
 - [ ] Set up Resend and the three contact-form variables above; send a real test enquiry.
 - [ ] Confirm the services, technology stack and FAQ answers reflect what Tevonax actually offers. Trim any tool the team cannot back up in a technical conversation: a shorter honest list is more credible.
-- [ ] Set `NEXT_PUBLIC_SITE_URL` (e.g. `https://your-domain.com`). It drives the canonical URL, Open Graph tags, sitemap and structured data. On Vercel the production domain is used automatically if it is not set.
+- [ ] The primary domain is `site.url` in `src/content/site.ts` (`https://tevonax.com`). It drives canonical URLs, Open Graph tags, the sitemap and structured data in production builds. Set `NEXT_PUBLIC_SITE_URL` only to override it (for example on a staging domain).
 - [ ] Review `src/app/privacy/page.tsx` (it describes the site as built: no cookies, no analytics) and update it if analytics or other tools are added.
 - [ ] Replace the live-text wordmark in `src/components/brand/Logo.tsx` with the final vector logo, if available.
 - [ ] Add real projects to `projects`, and any social/WhatsApp/booking links.
+
+## Deploying to Vercel with tevonax.com
+
+1. **Push the repo to GitHub** (Vercel deploys from it).
+2. **Plan:** Vercel's Hobby plan is restricted to non-commercial, personal use. A company website belongs on the Pro plan (or another host).
+3. **Import the project** in Vercel (Next.js is detected automatically). Add the environment variables `RESEND_API_KEY`, `CONTACT_TO_EMAIL` and `CONTACT_FROM_EMAIL` (see `.env.example`), then deploy. Test everything on the temporary `*.vercel.app` URL first.
+4. **Add the domain:** Project → Settings → Domains → add `tevonax.com` and `www.tevonax.com`, and set `www` to redirect to `tevonax.com`.
+5. **DNS at Spaceship** (keep Spaceship's nameservers): add exactly the records Vercel displays for your project, normally an `A` record for the apex (host `@`) and a `CNAME` for `www`. Delete any existing parking records for those two hosts, and leave every other record (email `MX`, verification `TXT`) untouched. Do not switch nameservers unless you copy all existing records first.
+6. Wait until Vercel shows the domain as valid. HTTPS is issued automatically.
+7. **Email:** create the `hello@tevonax.com` mailbox (or forwarding), verify a sending subdomain in Resend (for example `mail.tevonax.com`) by adding the DNS records Resend shows, set `CONTACT_FROM_EMAIL` accordingly, redeploy, and send a real test enquiry.
+8. **After launch:** add the site to Google Search Console and submit `https://tevonax.com/sitemap.xml`.
 
 ## Design system
 
